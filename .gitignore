@@ -1,3 +1,4 @@
+# .NET Core
 bin/
 obj/
 out/
@@ -7,6 +8,11 @@ out/
 *.log
 aks-hellowebapi.sln
 
+# Ignore user-specific files and IDE settings
 .vscode/
 .vs/
 *.csproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
