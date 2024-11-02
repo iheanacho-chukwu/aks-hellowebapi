@@ -1,0 +1,12 @@
+bin/
+obj/
+out/
+*.db
+*.mdf
+*.ldf
+*.log
+aks-hellowebapi.sln
+
+.vscode/
+.vs/
+*.csproj.user
