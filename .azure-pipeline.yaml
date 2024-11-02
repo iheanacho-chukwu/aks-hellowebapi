@@ -12,7 +12,7 @@ variables:
   imageName: webapi
   kubernetesNamespace: default
   azureContainerRegistrySC: eng-lab-acr
-  kubernetesSC:
+  kubernetesSC: eng-aks-demo
 
 stages:
 - stage: BuildAndPush
