@@ -53,13 +53,22 @@ stages:
             inputs:
               kubectlVersion: 'latest'
 
-          - task: Kubernetes@1
+          # - task: Kubernetes@1
+          #   inputs:
+          #     connectionType: 'Kubernetes Service Connection'
+          #     kubernetesServiceEndpoint: 'eng-aks-demo'
+          #     command: 'apply'
+          #     secretType: 'dockerRegistry'
+          #     containerRegistryType: 'Azure Container Registry'
+
+          - task: KubernetesManifest@1
             inputs:
-              connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'eng-aks-demo'
-              command: 'apply'
-              secretType: 'dockerRegistry'
-              containerRegistryType: 'Azure Container Registry'
+              action: 'deploy'
+              connectionType: 'kubernetesServiceConnection'
+              kubernetesServiceConnection: 'eng-aks-demo'
+              namespace: '$(kubernetesNamespace)'
+              manifests: '**/webapi-app.yaml'
+              containers: '$(acrName)/$(imageName):$(Build.BuildId)'
           # - task: KubernetesManifest@0
           #   displayName: "Deploy to AKS"
           #   inputs:
