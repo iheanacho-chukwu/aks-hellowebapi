@@ -38,6 +38,18 @@ stages:
         tags: |
           $(Build.BuildId)
 
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        Contents: '**/*.yaml'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'helloapp'
+        publishLocation: 'Container'
+
 - stage: DeployToAKS
   displayName: "Deploy to AKS"
   dependsOn: BuildAndPush
@@ -49,23 +61,22 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'current'
+              artifactName: 'helloapp'
+              itemPattern: '**/*.yaml'
+              targetPath: '$(System.ArtifactsDirectory)'
+
           - task: KubectlInstaller@0
             inputs:
               kubectlVersion: 'latest'
 
-          - task: Kubernetes@1
+          - task: KubernetesManifest@0
+            displayName: "Deploy to AKS"
             inputs:
-              connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'eng-aks-demo'
-              command: 'apply'
-              secretType: 'dockerRegistry'
-              containerRegistryType: 'Azure Container Registry'
-          # - task: KubernetesManifest@0
-          #   displayName: "Deploy to AKS"
-          #   inputs:
-          #     kubernetesServiceConnection: $(kubernetesSC)
-          #     namespace: $(kubernetesNamespace)
-          #     manifests: |
-          #       **/webapi-app.yaml
-          #     containers: |
-          #       $(acrName)/$(imageName):$(Build.BuildId)
+              action: 'deploy'
+              kubernetesServiceConnection: $(kubernetesSC)
+              namespace: 'default'
+              manifests: '$(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml'
+              containers: "$(acrName)/$(imageName):$(Build.BuildId)"
