@@ -13,6 +13,6 @@ builder.WebHost.ConfigureKestrel(options =>
 var app = builder.Build();
 
 // A single endpoint that returns a basic message
-app.MapGet("/", () => "Hello from this side of life!");
+app.MapGet("/", () => "HellowebAPI containerized application: Hello from this side of life!");
 
 app.Run();
