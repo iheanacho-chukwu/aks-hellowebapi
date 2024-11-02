@@ -53,6 +53,20 @@ stages:
             inputs:
               kubectlVersion: 'latest'
 
+          - task: Kubernetes@1
+            inputs:
+              connectionType: 'Kubernetes Service Connection'
+              kubernetesServiceEndpoint: 'eng-aks-demo'
+              namespace: '$(kubernetesNamespace)'
+              command: 'apply'
+              useConfigurationFile: true
+              arguments: '-f **/webapi-app.yaml'
+              secretType: 'dockerRegistry'
+              containerRegistryType: 'Azure Container Registry'
+              azureSubscriptionEndpointForSecrets: 'eng-lab-automation'
+              azureContainerRegistry: 'demoakschidi.azurecr.io'
+              forceUpdate: false
+              workingDirectory: '$(System.DefaultWorkingDirectory)/manifest'
           # - task: Kubernetes@1
           #   inputs:
           #     connectionType: 'Kubernetes Service Connection'
@@ -67,14 +81,5 @@ stages:
               connectionType: 'kubernetesServiceConnection'
               kubernetesServiceConnection: 'eng-aks-demo'
               namespace: '$(kubernetesNamespace)'
-              manifests: '**/webapi-app.yaml'
+              manifests: '$(System.DefaultWorkingDirectory)/manifest'
               containers: '$(acrName)/$(imageName):$(Build.BuildId)'
-          # - task: KubernetesManifest@0
-          #   displayName: "Deploy to AKS"
-          #   inputs:
-          #     kubernetesServiceConnection: $(kubernetesSC)
-          #     namespace: $(kubernetesNamespace)
-          #     manifests: |
-          #       **/webapi-app.yaml
-          #     containers: |
-          #       $(acrName)/$(imageName):$(Build.BuildId)
