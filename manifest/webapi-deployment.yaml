@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: webapi
-        image: demoakschidi.azurecr.io/webapi:v1
+        image: demoakschidi.azurecr.io/webapi
         ports:
         - containerPort: 80
 ---
