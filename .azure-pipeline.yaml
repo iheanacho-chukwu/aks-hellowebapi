@@ -7,7 +7,6 @@ pool:
   name: linux-agent-pool
 
 variables:
-  # Set the name of your ACR and AKS cluster
   acrName: "demoakschidi.azurecr.io"
   imageName: webapi
   kubernetesNamespace: default
@@ -72,7 +71,7 @@ stages:
             inputs:
               kubectlVersion: 'latest'
 
-          - task: KubernetesManifest@0
+          - task: KubernetesManifest@1
             displayName: "Deploy to AKS"
             inputs:
               action: 'deploy'
