@@ -78,4 +78,4 @@ stages:
               kubernetesServiceConnection: $(kubernetesSC)
               namespace: 'default'
               manifests: '$(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml'
-              containers: "$(acrName)/$(imageName):$(Build.BuildId)"
+              containers: "$(acrName)/$(imageName)"
