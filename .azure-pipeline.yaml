@@ -72,7 +72,7 @@ stages:
             inputs:
               kubectlVersion: 'latest'
 
-          - task: KubernetesManifest@0
+          - task: KubernetesManifest@1
             displayName: "Deploy to AKS"
             inputs:
               action: 'deploy'
