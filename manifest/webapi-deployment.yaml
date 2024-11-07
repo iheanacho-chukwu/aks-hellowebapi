@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: webapi
-        image: docker.io/iheanacho/webapi
+        image: "#{repositoryUrl}#"
         ports:
         - containerPort: 80
 ---
