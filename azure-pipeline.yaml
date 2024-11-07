@@ -65,6 +65,24 @@ stages:
               itemPattern: '**/*.yaml'
               targetPath: '$(System.ArtifactsDirectory)'
 
+          - task: replacetokens@5
+            name: Update_Manifest_File
+            displayName: Update Manifest File
+            inputs:
+              targetFiles: '$(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml'
+              encoding: auto
+              tokenPattern: default
+              writeBOM: true
+              escapeType: none
+              verbosity: detailed
+              actionOnMissing: warn
+              keepToken: false
+              actionOnNoFiles: warn
+              enableTransforms: false
+              enableRecursion: false
+              useLegacyPattern: false
+              enableTelemetry: false
+
           - task: KubectlInstaller@0
             inputs:
               kubectlVersion: 'latest'
