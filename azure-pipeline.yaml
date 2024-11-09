@@ -96,6 +96,6 @@ stages:
             inputs:
               action: 'deploy'
               kubernetesServiceConnection: $(kubernetesSC)
-              namespace: '$appName'
+              namespace: $(appName)
               manifests: '$(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml'
               containers: "$(repositoryUrl):$(tagName)"
