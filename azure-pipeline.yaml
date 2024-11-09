@@ -80,6 +80,13 @@ stages:
               useLegacyPattern: false
               enableTelemetry: false
 
+          - task: CmdLine@2
+            name: Validate_Manifest_File
+            displayName: Validate Manifest File
+            inputs:
+              script: jq . '$(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml'
+              failOnStderr: true
+
           - task: KubectlInstaller@0
             inputs:
               kubectlVersion: 'latest'
