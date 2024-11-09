@@ -1,49 +1,29 @@
 trigger:
   branches:
     include:
-      - main
+    - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  azureContainerRegistrySC: eng-lab-acr
-  repositoryUrl: "891612567594.dkr.ecr.us-east-1.amazonaws.com/webapi"
-  imageName: webapi
-  tagName: $(Build.BuildId)
-  kubernetesNamespace: default
-  containerSC: aws-ecr-connection
+  - group: aws
+  - name: DOCKER_REPOSITORY
+    value: $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME)
 
-stages:
-- stage: BuildAndPush
-  displayName: "Build and Push Docker Image"
-  jobs:
-  - job: Build
-    displayName: "Build and Push Docker Image to ACR"
-    steps:
-    - checkout: self
+steps:
+- script: |
+    aws ecr get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com
+  displayName: 'Login to AWS'
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
 
-    - task: Docker@2
-      displayName: "Build and Push Docker Image"
-      inputs:
-        containerRegistry: "$(containerSC)"
-        repository: $(repositoryUrl)
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        tags: |
-          $(tagName)
-
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)'
-        Contents: '**/*.yaml'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'helloapp'
-        publishLocation: 'Container'
-
-
-
+- task: Docker@2
+  displayName: Build docker image
+  inputs:
+    repository: $(DOCKER_REPOSITORY)
+    command: buildAndPush
+    Dockerfile: Dockerfile
+    tags: |
+      latest
