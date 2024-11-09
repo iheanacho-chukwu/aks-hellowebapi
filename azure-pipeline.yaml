@@ -21,14 +21,14 @@ steps:
     AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
     AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
 
-# - task: Docker@2
-#   displayName: Build docker image
-#   inputs:
-#     repository: $(DOCKER_REPOSITORY)
-#     command: buildAndPush
-#     Dockerfile: Dockerfile
-#     tags: |
-#       $(TAG)
+- task: Docker@2
+  displayName: Build docker image
+  inputs:
+    repository: $(DOCKER_REPOSITORY)
+    command: buildAndPush
+    Dockerfile: Dockerfile
+    tags: |
+      $(TAG)
 
 - script: |
     docker build -t $(DOCKER_REPOSITORY):$(TAG) .
