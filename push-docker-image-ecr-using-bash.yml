@@ -17,14 +17,14 @@ steps:
 - script: |
     echo "Logging in to AWS ECR"
     aws ecr get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com
-    
-    echo "Building Docker image"
+  displayName: 'Login to AWS'
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+
+- script: |
     docker build -t $(DOCKER_REPOSITORY):$(TAG) .
-    
-    echo "Tagging Docker image"
     docker tag $(DOCKER_REPOSITORY):$(TAG) $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME):$(TAG)
-    
-    echo "Pushing Docker image to ECR"
     docker push $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME):$(TAG)
   displayName: 'Build and Push Docker Image using Bash Script'
   env:
