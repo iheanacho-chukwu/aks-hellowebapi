@@ -11,7 +11,7 @@ variables:
   - name: DOCKER_REPOSITORY
     value: $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME)
   - name: TAG
-    value: $(VERSION)-$(COMMIT)
+    value: $(Build.BuildId)-$(Build.SourceVersion)
 
 steps:
 - script: |
