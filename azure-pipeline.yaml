@@ -7,14 +7,12 @@ pool:
   name: linux-agent-pool
 
 variables:
-  # repositoryUrl: "demoakschidi.azurecr.io/webapi"
   azureContainerRegistrySC: eng-lab-acr
-  repositoryUrl: "docker.io/iheanacho/webapi"
+  repositoryUrl: "891612567594.dkr.ecr.us-east-1.amazonaws.com/webapi"
   imageName: webapi
   tagName: $(Build.BuildId)
   kubernetesNamespace: default
-  dockerHubSC: dockerhubSC
-  kubernetesSC: eng-aks-demo
+  containerSC: aws-ecr-connection
 
 stages:
 - stage: BuildAndPush
@@ -28,7 +26,7 @@ stages:
     - task: Docker@2
       displayName: "Build and Push Docker Image"
       inputs:
-        containerRegistry: "$(dockerHubSC)"
+        containerRegistry: "$(containerSC)"
         repository: $(repositoryUrl)
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
@@ -47,51 +45,5 @@ stages:
         ArtifactName: 'helloapp'
         publishLocation: 'Container'
 
-- stage: DeployToAKS
-  displayName: "Deploy to AKS"
-  dependsOn: BuildAndPush
-  jobs:
-  - deployment: Deploy
-    displayName: "Deploy to AKS"
-    environment: 'dev'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              buildType: 'current'
-              artifactName: 'helloapp'
-              itemPattern: '**/*.yaml'
-              targetPath: '$(System.ArtifactsDirectory)'
 
-          - task: replacetokens@5
-            name: Update_Manifest_File
-            displayName: Update Manifest File
-            inputs:
-              targetFiles: '$(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml'
-              encoding: auto
-              tokenPattern: default
-              writeBOM: true
-              escapeType: none
-              verbosity: detailed
-              actionOnMissing: warn
-              keepToken: false
-              actionOnNoFiles: warn
-              enableTransforms: false
-              enableRecursion: false
-              useLegacyPattern: false
-              enableTelemetry: false
 
-          - task: KubectlInstaller@0
-            inputs:
-              kubectlVersion: 'latest'
-
-          - task: KubernetesManifest@1
-            displayName: "Deploy to AKS"
-            inputs:
-              action: 'deploy'
-              kubernetesServiceConnection: $(kubernetesSC)
-              namespace: 'default'
-              manifests: '$(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml'
-              containers: "$(repositoryUrl):$(tagName)"
