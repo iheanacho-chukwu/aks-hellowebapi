@@ -3,7 +3,7 @@
 ## Create an ACR (if you don’t have one yet):
 ```bash
 az login
-az acr create --resource-group <your-resource-group> --name demoakschidi --sku Basic
+az acr create --resource-group <your-resource-group> --name <your-acr-name> --sku Basic
 ```
 ## Tag the Docker Image for ACR:
 ```bash

@@ -7,13 +7,9 @@ pool:
   name: linux-agent-pool
 
 variables:
-  # repositoryUrl: "demoakschidi.azurecr.io/webapi"
-  azureContainerRegistrySC: eng-lab-acr
   repositoryUrl: "docker.io/iheanacho/webapi"
-  imageName: webapi
   tagName: $(Build.BuildId)
-  kubernetesNamespace: default
-  dockerHubSC: dockerhubSC
+  containerRegistrySC: dockerhubSC
   kubernetesSC: eng-aks-demo
 
 stages:
@@ -28,7 +24,7 @@ stages:
     - task: Docker@2
       displayName: "Build and Push Docker Image"
       inputs:
-        containerRegistry: "$(dockerHubSC)"
+        containerRegistry: "$(containerRegistrySC)"
         repository: $(repositoryUrl)
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
