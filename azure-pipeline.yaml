@@ -84,7 +84,7 @@ stages:
             name: Validate_Manifest_File
             displayName: Validate Manifest File
             inputs:
-              script: jq . '$(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml'
+              script: yq eval '.' $(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml
               failOnStderr: true
 
           - task: KubectlInstaller@0
