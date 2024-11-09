@@ -4,7 +4,7 @@ trigger:
       - main
 
 pool:
-  name: linux-agent-pool
+  vmImage: 'ubuntu-latest'
 
 variables:
   azureContainerRegistrySC: eng-lab-acr
