@@ -10,6 +10,8 @@ variables:
   - group: aws
   - name: DOCKER_REPOSITORY
     value: $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME)
+  - name: TAG
+    value: $(Build.BuildId)
 
 steps:
 - script: |
@@ -26,11 +28,11 @@ steps:
 #     command: buildAndPush
 #     Dockerfile: Dockerfile
 #     tags: |
-#       latest
+#       $(TAG)
 
 - script: |
     docker build -t $(DOCKER_REPOSITORY):latest .
-    docker tag $(DOCKER_REPOSITORY):latest $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME):latest
+    docker tag $(DOCKER_REPOSITORY):$(TAG) $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME):latest
     docker push $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME):latest
   displayName: 'Build and Push Docker Image using Bash Script'
   env:
