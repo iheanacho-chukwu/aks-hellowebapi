@@ -18,6 +18,11 @@ docker push <your-acr-name>.azurecr.io/webapi:v1
 
 - Create a Deployment and Service YAML (webapi-deployment.yaml)
 ```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webapi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -34,14 +39,14 @@ spec:
     spec:
       containers:
       - name: webapi
-        image: <your-acr-name>.azurecr.io/webapi:v1
+        image: <your-acr-name>.azurecr.io/webapi:latest
         ports:
         - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: webapi-service
+  name: webapi
 spec:
   selector:
     app: webapi
