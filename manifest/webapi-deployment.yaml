@@ -1,25 +1,25 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: webapi-namespace
+  name: "#{appName}#"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapi-deployment
-  namespace: webapi-namespace
+  name: "#{appName}#"
+  namespace: "#{appName}#"
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: webapi
+      app: "#{appName}#"
   template:
     metadata:
       labels:
-        app: webapi
+        app: "#{appName}#"
     spec:
       containers:
-      - name: webapi
+      - name: "#{appName}#"
         image: "#{repositoryUrl}#"
         ports:
         - containerPort: 80
@@ -27,11 +27,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: webapi-service
-  namespace: webapi-namespace
+  name: "#{appName}#"
+  namespace: "#{appName}#"
 spec:
   selector:
-    app: webapi
+    app: "#{appName}#"
   ports:
     - protocol: TCP
       port: 80

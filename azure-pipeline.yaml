@@ -11,6 +11,7 @@ variables:
   tagName: $(Build.BuildId)
   containerRegistrySC: dockerhubSC
   kubernetesSC: eng-aks-demo
+  appName: webapi
 
 stages:
 - stage: BuildAndPush
@@ -88,6 +89,6 @@ stages:
             inputs:
               action: 'deploy'
               kubernetesServiceConnection: $(kubernetesSC)
-              namespace: 'default'
+              namespace: '$appName'
               manifests: '$(System.ArtifactsDirectory)/manifest/webapi-deployment.yaml'
               containers: "$(repositoryUrl):$(tagName)"
