@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapi
+  name: webapi-deployment
 spec:
   replicas: 2
   selector:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: webapi
-        image: demoakschidi.azurecr.io/webapi:v1
+        image: "#{repositoryUrl}#"
         ports:
         - containerPort: 80
 ---
