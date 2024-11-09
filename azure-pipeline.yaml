@@ -7,7 +7,7 @@ pool:
   name: linux-agent-pool
 
 variables:
-  repositoryUrl: "docker.io/iheanacho/$appName"
+  repositoryUrl: "docker.io/iheanacho/$(appName)"
   tagName: $(Build.BuildId)
   containerRegistrySC: dockerhubSC
   kubernetesSC: eng-aks-demo
